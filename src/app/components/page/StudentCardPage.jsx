@@ -1,16 +1,16 @@
 import React from "react";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ContainerWrapper from "../common/ContainerWrapper.jsx";
 import DataNotFound from "../common/DataNotFound.jsx";
 import { getAge } from "../../utils/getAge/getAge.js";
 
 const StudentCardPage = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { userId } = useParams();
     const studentData = JSON.parse((localStorage.getItem("user")));
     const handleDelete = () => {
         if (localStorage.user) localStorage.removeItem("user");
-        history.replace("/");
+        navigate("/", { replace: true });
     };
     return (
         <ContainerWrapper title="Карточка студента">
@@ -28,7 +28,7 @@ const StudentCardPage = () => {
                     </div>
                     <div>Файл: {studentData.file}</div>
                     <div>
-                        <Link to={`/card/${studentData.id}/edit`}>
+                        <Link to="edit">
                             <button type="button" className="btn btn-primary mt-4 m-1">Редактировать</button>
                         </Link>
                         <button

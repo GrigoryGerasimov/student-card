@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { FormLayout, FormField, NumberField, AutoFocusedField } from "../common/form";
 import ModalWindow from "../common/ModalWindow.jsx";
@@ -7,7 +7,6 @@ import ContainerWrapper from "../common/ContainerWrapper.jsx";
 
 const CreateStudentCardPage = () => {
     const { userId } = useParams();
-    const history = useHistory();
     const userData = localStorage.user ? JSON.parse(localStorage.getItem("user")) : {
         id: userId,
         firstName: "",
@@ -64,7 +63,7 @@ const CreateStudentCardPage = () => {
                         text="Карточка успешно создана!"
                     />
                 </FormLayout>
-            ) : history.replace(`/card/${userId}`)
+            ) : <Navigate to={`/card/${userData.id}`} replace={true} />
             }
         </ContainerWrapper>
     );
