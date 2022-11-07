@@ -7,19 +7,11 @@ import ContainerWrapper from "../common/ContainerWrapper.jsx";
 
 const CreateStudentCardPage = () => {
     const { userId } = useParams();
-    const userData = localStorage.user ? JSON.parse(localStorage.getItem("user")) : {
-        id: userId,
-        firstName: "",
-        lastName: "",
-        yearOfBirth: "",
-        phone: "",
-        portfolio: "",
-        file: ""
-    };
+
     return (
         <ContainerWrapper title="Карточка студента">
             {!localStorage.user ? (
-                <FormLayout userId={userId} userData={userData}>
+                <FormLayout userId={userId}>
                     <AutoFocusedField
                         label="Имя"
                         type="text"
@@ -63,7 +55,7 @@ const CreateStudentCardPage = () => {
                         text="Карточка успешно создана!"
                     />
                 </FormLayout>
-            ) : <Navigate to={`/card/${userData.id}`} replace={true} />
+            ) : <Navigate to={`/card/${localStorage.user.id}`} replace={true} />
             }
         </ContainerWrapper>
     );

@@ -9,6 +9,7 @@ import ContainerWrapper from "../common/ContainerWrapper.jsx";
 const EditStudentCardPage = () => {
     const { userId } = useParams();
     const userData = JSON.parse(localStorage.getItem("user"));
+
     return (
         <ContainerWrapper title="Изменить данные">
             {userData.id === userId ? (

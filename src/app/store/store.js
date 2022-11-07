@@ -1,4 +1,6 @@
-export const createStore = (initialState, reducer) => {
+import { reducer } from "./reducer.js";
+
+const createStore = reducer => initialState => {
     let state = initialState || {};
     const listeners = [];
 
@@ -17,3 +19,15 @@ export const createStore = (initialState, reducer) => {
 
     return { getState, subscribe, dispatch };
 };
+
+export const getStoreInitialState = id => localStorage.user ? JSON.parse(localStorage.getItem("user")) : {
+    id,
+    firstName: "",
+    lastName: "",
+    yearOfBirth: "",
+    phone: "",
+    portfolio: "",
+    file: ""
+};
+
+export const composeStore = createStore(reducer);
