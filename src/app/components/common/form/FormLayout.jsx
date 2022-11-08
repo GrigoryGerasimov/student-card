@@ -1,41 +1,62 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import { validate } from "../../../utils/validate/validate.js";
 import { validatorConfig } from "../../page/validatorConfig.js";
+import { useStore } from "../../../store/hooks/useStore.jsx";
+import { useDispatch } from "../../../store/hooks/useDispatch.jsx";
+import { useSelector } from "../../../store/hooks/useSelector.jsx";
+import { actions } from "../../../store/actions.js";
+import PropTypes from "prop-types";
 
-const FormLayout = ({ userId, userData, children }) => {
+const FormLayout = ({ userId, children }) => {
     const fileRef = useRef();
-    const history = useHistory();
-    const [data, setData] = useState(userData || {});
+    const navigate = useNavigate();
+
+    const { store } = useStore();
+    const { subscribe } = store;
+    const { dispatch } = useDispatch();
+    const getState = useSelector();
+    const { createCard, changeCard } = actions;
+
+    const [data, setData] = useState(getState());
     const [errors, setErrors] = useState({});
     const [show, setShow] = useState(false);
+
     const handleClose = () => {
         setShow(false);
-        data?.id ? history.push(`/card/${data.id}`) : history.replace(`/card/${userId}`);
+        data?.id ? navigate(`/card/${data.id}`) : navigate(`/card/${userId}`, { replace: true });
     };
+
     const handleShow = () => setShow(true);
+
     const handleChange = ({ target }) => {
         const { name, value } = target;
-        setData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+        dispatch(changeCard(({ ...data, [name]: value })));
     };
+
+    useEffect(() => {
+        subscribe(() => setData(getState()));
+    }, [handleChange]);
+
     const modalChild = children.find(item => item.props.type === "modal");
     const isModalChild = !!~children.indexOf(modalChild);
+
     const handleSubmit = evt => {
         evt.preventDefault();
         const errors = validate(data, validatorConfig);
         if (Object.keys(errors).length) return false;
-        localStorage.setItem("user", JSON.stringify(data));
-        if (!isModalChild) data?.id ? history.push(`/card/${data.id}`) : history.replace(`/card/${userId}`);
+        dispatch(createCard(data));
+        if (!isModalChild) data?.id ? navigate(`/card/${data.id}`) : navigate(`/card/${userId}`, { replace: true });
     };
+
     useEffect(() => {
         setErrors(validate(data, validatorConfig));
     }, [data]);
+
     const isValid = !Object.keys(errors).length;
-    const handleClick = () => history.push(`/card/${userId}`);
+
+    const handleClick = () => navigate(`/card/${userId}`);
+
     const handleMoveWithEnter = evt => {
         if (evt.keyCode === 13) {
             evt.preventDefault();
@@ -44,6 +65,7 @@ const FormLayout = ({ userId, userData, children }) => {
             form.elements[inputIndex + 1].focus();
         }
     };
+
     return (
         <form onSubmit={handleSubmit}>
             {React.Children.map(children, child => {

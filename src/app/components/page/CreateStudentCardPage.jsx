@@ -1,26 +1,19 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { FormLayout, FormField, NumberField, AutoFocusedField } from "../common/form";
 import ModalWindow from "../common/ModalWindow.jsx";
 import ContainerWrapper from "../common/ContainerWrapper.jsx";
+import { useSelector } from "../../store/hooks/useSelector.jsx";
+import { getUserId } from "../../store/store.js";
 
 const CreateStudentCardPage = () => {
-    const { userId } = useParams();
-    const history = useHistory();
-    const userData = localStorage.user ? JSON.parse(localStorage.getItem("user")) : {
-        id: userId,
-        firstName: "",
-        lastName: "",
-        yearOfBirth: "",
-        phone: "",
-        portfolio: "",
-        file: ""
-    };
+    const userId = useSelector(getUserId());
+
     return (
         <ContainerWrapper title="Карточка студента">
             {!localStorage.user ? (
-                <FormLayout userId={userId} userData={userData}>
+                <FormLayout userId={userId}>
                     <AutoFocusedField
                         label="Имя"
                         type="text"
@@ -64,7 +57,7 @@ const CreateStudentCardPage = () => {
                         text="Карточка успешно создана!"
                     />
                 </FormLayout>
-            ) : history.replace(`/card/${userId}`)
+            ) : <Navigate to={`/card/${userId}`} replace={true} />
             }
         </ContainerWrapper>
     );
