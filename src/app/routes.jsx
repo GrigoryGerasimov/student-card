@@ -9,6 +9,7 @@ export const routes = [
         path: "card",
         element: <Card/>,
         children: [
+            { path: "", element: <PageNotFound/> },
             {
                 path: ":userId",
                 element: <StudentCard/>,

@@ -1,12 +1,14 @@
 import React from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { FormLayout, FormField, NumberField, AutoFocusedField } from "../common/form";
 import ModalWindow from "../common/ModalWindow.jsx";
 import ContainerWrapper from "../common/ContainerWrapper.jsx";
+import { useSelector } from "../../store/hooks/useSelector.jsx";
+import { getUserId } from "../../store/store.js";
 
 const CreateStudentCardPage = () => {
-    const { userId } = useParams();
+    const userId = useSelector(getUserId());
 
     return (
         <ContainerWrapper title="Карточка студента">
@@ -55,7 +57,7 @@ const CreateStudentCardPage = () => {
                         text="Карточка успешно создана!"
                     />
                 </FormLayout>
-            ) : <Navigate to={`/card/${localStorage.user.id}`} replace={true} />
+            ) : <Navigate to={`/card/${userId}`} replace={true} />
             }
         </ContainerWrapper>
     );

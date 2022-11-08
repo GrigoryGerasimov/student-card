@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import DataNotFound from "../common/DataNotFound.jsx";
 import { FormLayout, FormField, NumberField, AutoFocusedField } from "../common/form";
 import ModalWindow from "../common/ModalWindow.jsx";
 import ContainerWrapper from "../common/ContainerWrapper.jsx";
+import { useDispatch } from "../../store/hooks/useDispatch.jsx";
+import { useSelector } from "../../store/hooks/useSelector.jsx";
+import { getUserId } from "../../store/store.js";
+import { actions } from "../../store/actions.js";
 
 const EditStudentCardPage = () => {
-    const { userId } = useParams();
-    const userData = JSON.parse(localStorage.getItem("user"));
+    const { dispatch } = useDispatch();
+    const userId = useSelector(getUserId());
+    const paramsId = useParams().userId;
+    const getUserData = useSelector();
+    const userData = getUserData();
+
+    useEffect(() => {
+        dispatch(actions.getCard());
+    }, []);
 
     return (
         <ContainerWrapper title="Изменить данные">
-            {userData.id === userId ? (
+            {userData.firstName && userId === paramsId ? (
                 <FormLayout userId={userId} userData={userData}>
                     <AutoFocusedField
                         label="Имя"

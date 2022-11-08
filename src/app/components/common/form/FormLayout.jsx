@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { validate } from "../../../utils/validate/validate.js";
 import { validatorConfig } from "../../page/validatorConfig.js";
-import { useStore } from "./hoc/withStore.jsx";
+import { useStore } from "../../../store/hooks/useStore.jsx";
+import { useDispatch } from "../../../store/hooks/useDispatch.jsx";
+import { useSelector } from "../../../store/hooks/useSelector.jsx";
 import { actions } from "../../../store/actions.js";
 import PropTypes from "prop-types";
 
@@ -11,7 +13,9 @@ const FormLayout = ({ userId, children }) => {
     const navigate = useNavigate();
 
     const { store } = useStore();
-    const { getState, subscribe, dispatch } = store;
+    const { subscribe } = store;
+    const { dispatch } = useDispatch();
+    const getState = useSelector();
     const { createCard, changeCard } = actions;
 
     const [data, setData] = useState(getState());
@@ -106,7 +110,6 @@ const FormLayout = ({ userId, children }) => {
                         break;
                     }
                     default: {
-                        console.log(data?.[child.props.name]);
                         config = {
                             ...child,
                             type: child.props.type,

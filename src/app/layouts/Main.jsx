@@ -1,17 +1,20 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { getNewID } from "../utils/getNewID.js";
+import { useSelector } from "../store/hooks/useSelector.jsx";
+import { getUserId } from "../store/store.js";
 import DataNotFound from "../components/common/DataNotFound.jsx";
 import ContainerWrapper from "../components/common/ContainerWrapper.jsx";
 
 const Main = () => {
-    const generatedId = getNewID();
-    const userData = localStorage.user ? JSON.parse(localStorage.getItem("user")) : {};
-    return userData?.id ? <Navigate to={`card/${userData.id}`} /> : (
+    const getUserData = useSelector();
+    const userData = getUserData();
+    const userId = useSelector(getUserId());
+
+    return userData?.firstName ? <Navigate to={`card/${userId}`} /> : (
         <ContainerWrapper title="Карточка студента">
             <DataNotFound
                 text="Данные отсутствуют"
-                path={`card/${generatedId}/create`}
+                path={`card/${userId}/create`}
                 label="Добавить"
             />
         </ContainerWrapper>

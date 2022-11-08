@@ -1,7 +1,7 @@
 import { reducer } from "./reducer.js";
 
-const createStore = reducer => initialState => {
-    let state = initialState || {};
+const configureStore = reducer => initialState => {
+    let state = initialState;
     const listeners = [];
 
     const getState = () => {
@@ -20,7 +20,7 @@ const createStore = reducer => initialState => {
     return { getState, subscribe, dispatch };
 };
 
-export const getStoreInitialState = id => localStorage.user ? JSON.parse(localStorage.getItem("user")) : {
+export const getStoreInitialState = id => ({
     id,
     firstName: "",
     lastName: "",
@@ -28,6 +28,8 @@ export const getStoreInitialState = id => localStorage.user ? JSON.parse(localSt
     phone: "",
     portfolio: "",
     file: ""
-};
+});
 
-export const composeStore = createStore(reducer);
+export const createStore = configureStore(reducer);
+
+export const getUserId = () => state => state ? state.id : null;

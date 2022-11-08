@@ -1,6 +1,6 @@
 import { actionTypes } from "./actions.js";
 
-const { GET_CARD, CREATE_CARD, CHANGE_CARD, EDIT_CARD } = actionTypes;
+const { GET_CARD, CREATE_CARD, CHANGE_CARD, DELETE_CARD } = actionTypes;
 
 export const reducer = (state, { type, payload }) => {
     switch (type) {
@@ -16,15 +16,15 @@ export const reducer = (state, { type, payload }) => {
             for (const field in newState) {
                 for (const property in payload) {
                     if (field === property && newState[field] !== payload[property]) {
-                        newState[field] += payload[property];
+                        newState[field] = payload[property];
                         break;
                     }
                 }
             }
             return newState;
         }
-        case EDIT_CARD: {
-            console.log("dump");
+        case DELETE_CARD: {
+            localStorage.removeItem("user");
             break;
         }
         default: {
